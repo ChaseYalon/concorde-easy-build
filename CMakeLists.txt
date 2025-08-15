@@ -10,7 +10,8 @@ set(GDB_DEBUG_OPTIONS           -ggdb3)
 set(LINKER_OPTIONS              -flto -Wl,--no-as-needed)
 
 # Find QSopt instead of CPLEX
-find_package(QSOPT REQUIRED)
+include_directories(/usr/lib/QS) 
+target_link_libraries(concorde_lp PUBLIC /usr/lib/QS/libqsopt.a)
 
 add_compile_options(${WARNING_OPTIONS})
 add_compile_options($<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>)
