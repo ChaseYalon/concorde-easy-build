@@ -56,16 +56,16 @@ set_target_properties(concorde_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # -----------------
 set(QSOPT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/LP")
 
-if(EXISTS "${QSOPT_DIR}/qsopt.h" AND EXISTS "${QSOPT_DIR}/libqsopt.a")
+if(EXISTS "${QSOPT_DIR}/qsopt.h" AND EXISTS "${QSOPT_DIR}/qsopt.a")
     message(STATUS "Using local QSopt at ${QSOPT_DIR}")
 
     add_library(concorde_lp
-        src/LP/lpqsopt.c
+        src/LP/qsopt.c
     )
 
     target_compile_features(concorde_lp PUBLIC c_std_11)
     target_include_directories(concorde_lp PUBLIC ${QSOPT_DIR})
-    target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS} ${QSOPT_DIR}/libqsopt.a)
+    target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS} ${QSOPT_DIR}/qsopt.a)
     set_target_properties(concorde_lp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 else()
