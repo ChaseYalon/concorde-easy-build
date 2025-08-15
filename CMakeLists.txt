@@ -9,7 +9,8 @@ set(DEBUG_OPTIONS               -O0)
 set(GDB_DEBUG_OPTIONS           -ggdb3)
 set(LINKER_OPTIONS              -flto -Wl,--no-as-needed)
 
-find_package(CPLEX REQUIRED)
+# Find QSopt instead of CPLEX
+find_package(QSOPT REQUIRED)
 
 add_compile_options(${WARNING_OPTIONS})
 add_compile_options($<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>)
@@ -18,6 +19,9 @@ add_compile_options($<$<AND:$<CONFIG:DEBUG>,$<CXX_COMPILER_ID:GNU>>:${GDB_DEBUG_
 add_link_options(-fPIC -ldl)
 include_directories("src/INCLUDE")
 
+#
+# UTIL
+#
 add_library(concorde_utils
         src/UTIL/allocrus.c
         src/UTIL/util.c
@@ -40,30 +44,38 @@ target_link_libraries(      concorde_utils PUBLIC ${LINKER_OPTIONS})
 target_link_libraries(      concorde_utils PRIVATE dl)
 target_compile_options(     concorde_utils PRIVATE -Wno-unused-function -Wno-stringop-truncation -Wno-unused-result)
 set_target_properties(      concorde_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_utils PROPERTIES SOVERSION 1)
 
+#
+# LP (uses QSopt instead of CPLEX)
+#
 add_library(concorde_lp
         src/LP/lpcplex8.c)
 target_compile_features(    concorde_lp PUBLIC c_std_11)
 target_link_libraries(      concorde_lp PUBLIC ${LINKER_OPTIONS})
-target_link_libraries(      concorde_lp PUBLIC Cplex::cplex)
+target_link_libraries(      concorde_lp PUBLIC QSOPT::qsopt)
 set_target_properties(      concorde_lp PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_lp PROPERTIES SOVERSION 1)
 
+#
+# BIGGUY
+#
 add_library(concorde_bigguy
         src/BIGGUY/bigguy.c)
 target_compile_features(    concorde_bigguy PUBLIC c_std_11)
 target_link_libraries(      concorde_bigguy PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_bigguy PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_bigguy PROPERTIES SOVERSION 1)
 
+#
+# HELDKARP
+#
 add_library(concorde_heldkarp
         src/HELDKARP/heldkarp.c)
 target_compile_features(    concorde_heldkarp PUBLIC c_std_11)
 target_link_libraries(      concorde_heldkarp PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_heldkarp PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_heldkarp PROPERTIES SOVERSION 1)
 
+#
+# EDGEGEN
+#
 add_library(concorde_edgegen
         src/EDGEGEN/edgegen.c
         src/EDGEGEN/xnear.c
@@ -73,16 +85,20 @@ target_compile_features(    concorde_edgegen PUBLIC c_std_11)
 target_link_libraries(      concorde_edgegen PUBLIC ${LINKER_OPTIONS})
 target_compile_options(     concorde_edgegen PRIVATE -Wno-unused-function -Wno-unused-result)
 set_target_properties(      concorde_edgegen PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_edgegen PROPERTIES SOVERSION 1)
 
+#
+# LINKERN
+#
 add_library(concorde_linkern
         src/LINKERN/linkern.c
         src/LINKERN/flip_two.c)
 target_compile_features(    concorde_linkern PUBLIC c_std_11)
 target_link_libraries(      concorde_linkern PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_linkern PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_linkern PROPERTIES SOVERSION 1)
 
+#
+# LOCALCUT
+#
 add_library(concorde_localcut
         src/LOCALCUT/first.c
         src/LOCALCUT/localcut.c
@@ -94,8 +110,10 @@ add_library(concorde_localcut
 target_compile_features(    concorde_localcut PUBLIC c_std_11)
 target_link_libraries(      concorde_localcut PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_localcut PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_localcut PROPERTIES SOVERSION 1)
 
+#
+# CUT
+#
 add_library(concorde_cut
         src/CUT/shrink.c
         src/CUT/connect.c
@@ -106,8 +124,10 @@ add_library(concorde_cut
 target_compile_features(    concorde_cut PUBLIC c_std_11)
 target_link_libraries(      concorde_cut PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_cut PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_cut PROPERTIES SOVERSION 1)
 
+#
+# PQ
+#
 add_library(concorde_pq
         src/PQ/cuttree.c
         src/PQ/consec1.c
@@ -117,15 +137,19 @@ target_compile_features(    concorde_pq PUBLIC c_std_11)
 target_link_libraries(      concorde_pq PUBLIC ${LINKER_OPTIONS})
 target_compile_options(     concorde_pq PRIVATE -Wno-unused-function)
 set_target_properties(      concorde_pq PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_pq PROPERTIES SOVERSION 1)
 
+#
+# FMATCH
+#
 add_library(concorde_fmatch
         src/FMATCH/fmatch.c)
 target_compile_features(    concorde_fmatch PUBLIC c_std_11)
 target_link_libraries(      concorde_fmatch PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_fmatch PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_fmatch PROPERTIES SOVERSION 1)
 
+#
+# KDTREE
+#
 add_library(concorde_kdtree
         src/KDTREE/kdbuild.c
         src/KDTREE/kdnear.c
@@ -134,31 +158,39 @@ add_library(concorde_kdtree
 target_compile_features(    concorde_kdtree PUBLIC c_std_11)
 target_link_libraries(      concorde_kdtree PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_kdtree PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_kdtree PROPERTIES SOVERSION 1)
 
+#
+# COMBS
+#
 add_library(concorde_combs
         src/COMBS/dngreedy.c
         src/COMBS/block.c)
 target_compile_features(    concorde_combs PUBLIC c_std_11)
 target_link_libraries(      concorde_combs PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_combs PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_combs PROPERTIES SOVERSION 1)
 
+#
+# VERIFY
+#
 add_library(concorde_verify
         src/VERIFY/verify.c)
 target_compile_features(    concorde_verify PUBLIC c_std_11)
 target_link_libraries(      concorde_verify PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_verify PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_verify PROPERTIES SOVERSION 1)
 
+#
+# TINY
+#
 add_library(concorde_tiny
         src/TINY/bnbmsp.c
         src/TINY/tinytsp.c)
 target_compile_features(    concorde_tiny PUBLIC c_std_11)
 target_link_libraries(      concorde_tiny PUBLIC ${LINKER_OPTIONS})
 set_target_properties(      concorde_tiny PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde_tiny PROPERTIES SOVERSION 1)
 
+#
+# MAIN LIB
+#
 add_library(concorde
         src/TSP/concorde.c
         src/TSP/control.c
@@ -204,22 +236,21 @@ target_link_libraries(      concorde PUBLIC concorde_verify)
 target_link_libraries(      concorde PUBLIC concorde_tiny)
 target_link_libraries(      concorde PUBLIC m)
 target_link_libraries(      concorde PUBLIC pthread)
-target_compile_options(     concorde PRIVATE -Wno-unused-function)
-target_compile_options(     concorde PRIVATE -Wno-stringop-truncation)
-target_compile_options(     concorde PRIVATE -Wno-stringop-overflow)
-target_compile_options(     concorde PRIVATE -Wno-format-overflow)
-target_compile_options(     concorde PRIVATE -Wno-unused-result)
+target_compile_options(     concorde PRIVATE -Wno-unused-function -Wno-stringop-truncation -Wno-stringop-overflow -Wno-format-overflow -Wno-unused-result)
 set_target_properties(      concorde PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# set_target_properties(      concorde PROPERTIES SOVERSION 1)
 
-add_executable(concorde-bin
-        src/TSP/concorde.c)
+#
+# BIN
+#
+add_executable(concorde-bin src/TSP/concorde.c)
 target_compile_features(    concorde-bin PUBLIC c_std_11)
-target_link_libraries(      concorde-bin PUBLIC ${LINKER_OPTIONS})
-target_link_libraries(      concorde-bin PUBLIC concorde)
+target_link_libraries(      concorde-bin PUBLIC ${LINKER_OPTIONS} concorde)
 
+#
+# POST BUILD (use QSopt in libconcorde_full)
+#
 add_custom_command(TARGET concorde POST_BUILD
-        COMMAND gcc -fPIC -shared -o libconcorde_full.so -Wl,--whole-archive *.a ${CPLEX_LIBRARIES} -lstdc++ -Wl,--no-whole-archive
+        COMMAND gcc -fPIC -shared -o libconcorde_full.so -Wl,--whole-archive *.a ${QSOPT_LIBRARIES} -lstdc++ -Wl,--no-whole-archive
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
         COMMENT "Creating libconcorde_full.so")
 
