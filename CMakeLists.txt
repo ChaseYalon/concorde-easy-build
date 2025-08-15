@@ -204,12 +204,6 @@ add_custom_command(TARGET concorde POST_BUILD
     COMMENT "Creating libconcorde_full.so"
 )
 
-add_custom_command(TARGET concorde POST_BUILD
-    COMMAND ar -x *.a
-    COMMAND ar -qc libconcorde_full.a *.o
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-    COMMENT "Creating libconcorde_full.a"
-)
 
 add_custom_command(TARGET concorde POST_BUILD
     COMMAND cat config.h machdefs.h util.h bigguy.h combs.h cut.h delaunay.h edgegen.h fmatch.h heldkarp.h kdtree.h linkern.h lp.h tsp.h consec1.h localcut.h macrorus.h mlinkern.h necklace.h pqsets.h pq.h cuttree.h tinytsp.h tsp.h verify.h | grep -v '\#include \"' > ${CMAKE_CURRENT_BINARY_DIR}/concorde.h
