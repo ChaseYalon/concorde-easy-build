@@ -52,25 +52,24 @@ target_compile_options(concorde_utils PRIVATE -Wno-unused-function -Wno-stringop
 set_target_properties(concorde_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # -----------------
-# LP (QSopt)
+# LP (QSopt) - local
 # -----------------
-if(USE_QSOPT)
-    # Add the LP source
+set(QSOPT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/LP/QS")
+
+if(EXISTS "${QSOPT_DIR}/qsopt.h" AND EXISTS "${QSOPT_DIR}/libqsopt.a")
+    message(STATUS "Using local QSopt at ${QSOPT_DIR}")
+
     add_library(concorde_lp
         src/LP/lpqsopt.c
     )
 
-    # Require C11
     target_compile_features(concorde_lp PUBLIC c_std_11)
-
-    # Include QSopt headers
-    target_include_directories(concorde_lp PUBLIC ${QSOPT_ROOT})
-
-    # Link QSopt static library
-    target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS} ${QSOPT_ROOT}/libqsopt.a)
-
-    # Position independent code
+    target_include_directories(concorde_lp PUBLIC ${QSOPT_DIR})
+    target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS} ${QSOPT_DIR}/libqsopt.a)
     set_target_properties(concorde_lp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+else()
+    message(FATAL_ERROR "QSopt not found in ${QSOPT_DIR}. Make sure QSopt is placed there.")
 endif()
 
 # -----------------
