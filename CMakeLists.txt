@@ -54,7 +54,7 @@ set_target_properties(concorde_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # -----------------
 # LP (QSopt) - local
 # -----------------
-set(QSOPT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/LP/QS")
+set(QSOPT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/LP")
 
 if(EXISTS "${QSOPT_DIR}/qsopt.h" AND EXISTS "${QSOPT_DIR}/libqsopt.a")
     message(STATUS "Using local QSopt at ${QSOPT_DIR}")
