@@ -89,10 +89,17 @@ add_concorde_module(concorde_edgegen
     src/EDGEGEN/xnear.c
     src/EDGEGEN/delaunay.c
     src/EDGEGEN/mlinkern.c
+    src/EDGEGEN/x_k_near.c
+    src/EDGEGEN/junk_nn.c
+    src/EDGEGEN/quad_nn.c
+    src/EDGEGEN/greedy.c
+    src/EDGEGEN/f2match.c
+    src/EDGEGEN/spanning.c
 )
 add_concorde_module(concorde_linkern
     src/LINKERN/linkern.c
     src/LINKERN/flip_two.c
+    src/LINKERN/flipper.c
 )
 add_concorde_module(concorde_localcut
     src/LOCALCUT/first.c
