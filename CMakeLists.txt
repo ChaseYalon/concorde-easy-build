@@ -5,12 +5,12 @@ project(concorde LANGUAGES C)
 # Options
 # -----------------
 option(USE_QSOPT "Use QSopt LP backend" ON)
-set(QSOPT_ROOT "/usr/lib/QS" CACHE PATH "Path to QSopt installation")
+set(QSOPT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src/LP" CACHE PATH "Path to QSopt installation")
 
 # -----------------
 # Compiler and linker options
 # -----------------
-set(WARNING_OPTIONS   -Wall -Wextra -Werror)
+set(WARNING_OPTIONS   -Wall -Wextra)  # Removed -Werror for compatibility with older code
 set(RELEASE_OPTIONS   -O3)
 set(DEBUG_OPTIONS     -O0)
 set(GDB_DEBUG_OPTIONS -ggdb3)
@@ -199,7 +199,7 @@ target_link_libraries(concorde-bin PUBLIC ${LINKER_OPTIONS} concorde)
 # Post build: shared + static lib
 # -----------------
 add_custom_command(TARGET concorde POST_BUILD
-    COMMAND gcc -fPIC -shared -o libconcorde_full.so -Wl,--whole-archive *.a ${QSOPT_ROOT}/libqsopt.a -lstdc++ -Wl,--no-whole-archive
+    COMMAND gcc -fPIC -shared -o libconcorde_full.so -Wl,--whole-archive *.a ${QSOPT_ROOT}/qsopt.a -lstdc++ -Wl,--no-whole-archive
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     COMMENT "Creating libconcorde_full.so"
 )
