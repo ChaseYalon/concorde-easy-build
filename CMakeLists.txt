@@ -55,7 +55,8 @@ set_target_properties(concorde_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # LP (QSopt)
 # -----------------
 if(USE_QSOPT)
-    add_library(concorde_lp src/LP/lpqs.c)
+    add_library(concorde_lp
+        src/LP/lpqsopt.c)
     target_compile_features(concorde_lp PUBLIC c_std_11)
     target_include_directories(concorde_lp PUBLIC ${QSOPT_ROOT})
     target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS} ${QSOPT_ROOT}/libqsopt.a)
