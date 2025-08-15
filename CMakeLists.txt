@@ -47,14 +47,16 @@ target_compile_options(concorde_utils PRIVATE -Wno-unused-function -Wno-stringop
 set_target_properties(concorde_utils PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # -----------------
-# LP (uses QSopt)
+# LP (use QSopt instead of CPLEX)
 # -----------------
+# Remove lpcplex8.c reference
+# Use QSopt interface instead (replace with lpqs.c if available)
 add_library(concorde_lp
-    src/LP/lpcplex8.c)
+    src/LP/lpqs.c)  # Make sure this is the QSopt interface file
 
 target_compile_features(concorde_lp PUBLIC c_std_11)
-target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS})
-target_link_libraries(concorde_lp PUBLIC /usr/lib/QS/libqsopt.a)
+target_include_directories(concorde_lp PUBLIC /usr/lib/QS)
+target_link_libraries(concorde_lp PUBLIC ${LINKER_OPTIONS} /usr/lib/QS/libqsopt.a)
 set_target_properties(concorde_lp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # -----------------
